@@ -1,4 +1,4 @@
 # GetContractABI
-A way to get contract address's ABI and subsequently connect your wallet to the contract on EVM blockchains programmatically. Supports Proxy Contracts.
+A way for developers to get a contract address's ABI and other details of the contract on EVM-based blockchains programmatically using ethers.js and APIs. Also works for Proxy Contracts.
 
-Improvements are welcome...
+Improvements to this repo are welcome...
