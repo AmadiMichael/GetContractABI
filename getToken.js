@@ -63,7 +63,7 @@ async function getTokenDetails(tokenContractAddress, chainName) {
         { credentials: "omit" }
       );
       contractABI = JSON.parse(text.data.result);
-      let newToken = new ethers.Contract(
+      let newContract = new ethers.Contract(
         tokenContractAddress,
         contractABI,
         wallet
@@ -82,7 +82,7 @@ async function getTokenDetails(tokenContractAddress, chainName) {
           { credentials: "omit" }
         );
         contractABI = JSON.parse(text.data.result);
-        newToken = new ethers.Contract(
+        newContract = new ethers.Contract(
           tokenContractAddress,
           contractABI,
           wallet
@@ -91,6 +91,12 @@ async function getTokenDetails(tokenContractAddress, chainName) {
         console.log(err.message);
         console.log("Not a proxy contract");
       }
+      
+      
+      
+      // ------------If it's not a token contract, replace this with function you want to call on the contract if any.------------------
+      
+      
       // Get contract name
       contractName = await newToken.name();
       //   Get token symbol
@@ -99,13 +105,17 @@ async function getTokenDetails(tokenContractAddress, chainName) {
       decimals = await newToken.decimals();
       //   Get token balance
       let balance = await newToken.balanceOf(address);
-
+      
       console.log("Contract/Token Name : " + contractName);
       console.log("Contract/Token Symbol : " + symbol);
       console.log("Contract/Token Decimals : " + decimals);
       console.log(
         "Your Balance : " + ethers.utils.formatEther(balance, decimals)
       );
+      
+      // -------------------------------------------------------------------------------------------------------------------------------
+
+ 
     } catch (err) {
       if (err.message == "Unexpected token C in JSON at position 0") {
         console.log(
