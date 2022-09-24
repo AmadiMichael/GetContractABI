@@ -54,7 +54,7 @@ async function getTokenDetails(tokenContractAddress, chainName) {
 
   //   Check that the inputed address is a valid address.
   if (ethers.utils.isAddress(tokenContractAddress)) {
-    let contractABI, decimals, symbol, contractName;
+    let contractABI;
     // Fetch the contract address's abi and connect wallet to it by creating a new Contract instance.
     try {
       let text = await axios(
@@ -63,14 +63,14 @@ async function getTokenDetails(tokenContractAddress, chainName) {
         { credentials: "omit" }
       );
       contractABI = JSON.parse(text.data.result);
-      let newToken = new ethers.Contract(
+      let newContract = new ethers.Contract(
         tokenContractAddress,
         contractABI,
         wallet
       );
       // If the contract is a proxy contract this will get the correct info.
       try {
-        const implementationAddress = await newToken.implementation();
+        const implementationAddress = await newContract.implementation();
         console.log("It is a proxy contract");
         console.log(
           "Implementation Contract Address: " + implementationAddress
@@ -82,30 +82,12 @@ async function getTokenDetails(tokenContractAddress, chainName) {
           { credentials: "omit" }
         );
         contractABI = JSON.parse(text.data.result);
-        newToken = new ethers.Contract(
-          tokenContractAddress,
-          contractABI,
-          wallet
-        );
       } catch (err) {
         console.log(err.message);
         console.log("Not a proxy contract");
       }
-      // Get contract name
-      contractName = await newToken.name();
-      //   Get token symbol
-      symbol = await newToken.symbol();
-      //   Get token decimals
-      decimals = await newToken.decimals();
-      //   Get token balance
-      let balance = await newToken.balanceOf(address);
 
-      console.log("Contract/Token Name : " + contractName);
-      console.log("Contract/Token Symbol : " + symbol);
-      console.log("Contract/Token Decimals : " + decimals);
-      console.log(
-        "Your Balance : " + ethers.utils.formatEther(balance, decimals)
-      );
+      console.log(contractABI);
     } catch (err) {
       if (err.message == "Unexpected token C in JSON at position 0") {
         console.log(
@@ -122,26 +104,26 @@ async function getTokenDetails(tokenContractAddress, chainName) {
 }
 
 async function test() {
-  //example with (POS) Wrapped BTC contract address on Polygon
+  //example with Lens protocol proxy contract address on Polygon
   await getTokenDetails(
-    "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+    "0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d",
     "Polygon"
   );
   console.log("--------------------------------------------------------------");
-  //example with USD Tether on Avalanche
-  await getTokenDetails(
-    "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
-    "Avalanche"
-  );
-  console.log("--------------------------------------------------------------");
-  //example with BUSD on Ethereum
-  await getTokenDetails(
-    "0x5864c777697Bf9881220328BF2f16908c9aFCD7e",
-    "Ethereum"
-  );
-  console.log("--------------------------------------------------------------");
-  //example with Wrapped DAI Stablecoin on Binance Smart Chain
-  await getTokenDetails("0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3", "Bsc");
+  // //example with USD Tether on Avalanche
+  // await getTokenDetails(
+  //   "0xc7198437980c041c805A1EDcbA50c1Ce5db95118",
+  //   "Avalanche"
+  // );
+  // console.log("--------------------------------------------------------------");
+  // //example with BUSD on Ethereum
+  // await getTokenDetails(
+  //   "0x5864c777697Bf9881220328BF2f16908c9aFCD7e",
+  //   "Ethereum"
+  // );
+  // console.log("--------------------------------------------------------------");
+  // //example with Wrapped DAI Stablecoin on Binance Smart Chain
+  // await getTokenDetails("0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3", "Bsc");
 }
 
 console.log(test());
